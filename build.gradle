@@ -5,6 +5,8 @@ plugins {
 group = 'com.hottabych04.app'
 version = '1.0-SNAPSHOT'
 
+compileJava.options.encoding = "UTF-8"
+
 repositories {
     mavenCentral()
 }

@@ -100,7 +100,7 @@ public class GameController {
             String[] parts = input.split(" ");
             if (parts.length == 2) {
                 try {
-                    row = parts[0].chars().findFirst().getAsInt() - 65;
+                    row = parts[0].toUpperCase().chars().findFirst().getAsInt() - 65;
                     col = Integer.parseInt(parts[1]);
                     if (row >= 0 && row < board.getBoardSize() && col >= 0 && col < board.getBoardSize()) {
                         return new int[]{row, col};
