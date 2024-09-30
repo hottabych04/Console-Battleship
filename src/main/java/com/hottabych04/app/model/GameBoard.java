@@ -4,7 +4,7 @@ public class GameBoard {
 
     private final static short MAX_LINE_LENGTH = 10;
 
-    private char[][] board;
+    private final char[][] board;
 
     private int shipsCount;
 
@@ -27,44 +27,60 @@ public class GameBoard {
 
         return switch (direction) {
             case UP -> {
-                if (row - size < 0) yield false;
-                for (int i = 0; i < size; i++){
-                    if (this.board[column][row+i] != '~') yield false;
-                }
-                yield true;
-            }
-            case LEFT -> {
-                if (column - size < 0) yield false;
-                for (int i = 0; i < size; i++){
-                    if (this.board[column-i][row] != '~') yield false;
-                }
-                yield true;
-            }
-            case RIGHT -> {
-                if (column + size >= MAX_LINE_LENGTH) yield false;
-                for (int i = 0; i < size; i++){
-                    if (this.board[column+i][row] != '~') yield false;
+                if (row - size + 1 < 0) yield false;
+                for (int i = -1; i <= size; i++){
+                    for (int j = column - 1; j <= (column + 1); j++){
+                        try {
+                            if (this.board[j][row-i] != '~') yield false;
+                        } catch (IndexOutOfBoundsException ignored) {}
+                    }
                 }
                 yield true;
             }
             case DOWN -> {
-                if (row + size >= MAX_LINE_LENGTH) yield false;
-                for (int i = 0; i < size; i++){
-                    if (this.board[column][row-i] != '~') yield false;
+                if (row + size > MAX_LINE_LENGTH) yield false;
+                for (int i = -1; i <= size; i++){
+                    for (int j = column - 1; j <= (column + 1); j++){
+                        try {
+                            if (this.board[j][row+i] != '~') yield false;
+                        } catch (IndexOutOfBoundsException ignored) {}
+                    }
+                }
+                yield true;
+            }
+            case LEFT -> {
+                if (column - size + 1 < 0) yield false;
+                for (int i = -1; i <= size; i++){
+                    for (int j = row - 1; j <= (row + 1); j++){
+                        try {
+                            if (this.board[column-i][j] != '~') yield false;
+                        } catch (IndexOutOfBoundsException ignored) {}
+                    }
+                }
+                yield true;
+            }
+            case RIGHT -> {
+                if (column + size > MAX_LINE_LENGTH) yield false;
+                for (int i = -1; i <= size; i++){
+                    for (int j = row - 1; j <= (row + 1); j++){
+                        try {
+                            if (this.board[column+i][j] != '~') yield false;
+                        } catch (IndexOutOfBoundsException ignored) {}
+                    }
                 }
                 yield true;
             }
         };
     }
 
-    private boolean checkPlace(int row, int column, int size){
-        // TODO: 30.09
-        return true;
-    }
-
     public void placeShip(int row, int column, int size, Direction direction){
         switch (direction) {
             case UP -> {
+                for (int i = 0; i < size; i++){
+                    this.board[column][row-i] = '#';
+                }
+            }
+            case DOWN -> {
                 for (int i = 0; i < size; i++){
                     this.board[column][row+i] = '#';
                 }
@@ -79,35 +95,34 @@ public class GameBoard {
                     this.board[column+i][row] = '#';
                 }
             }
-            case DOWN -> {
-                for (int i = 0; i < size; i++){
-                    this.board[column][row-i] = '#';
-                }
-            }
         }
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBoard = new StringBuilder();
-
-        stringBoard.append(' ');
-
-        for (int i = 0; i < 10; i++) {
-            stringBoard.append(" ").append(i).append(" ");
+    public boolean checkHit(int row, int col) {
+        if (board[col][row] == '#') {
+            board[col][row] = 'X';
+            return true;
+        } else if (board[col][row] == '~') {
+            board[col][row] = 'O';
+            return false;
         }
+        return false;
+    }
 
-        stringBoard.append('\n');
-
-        for (int row = 0; row < MAX_LINE_LENGTH; row++) {
-
-            stringBoard.append((char) (65+row));
-            for (int column = 0; column < MAX_LINE_LENGTH; column++) {
-                 stringBoard.append(" ").append(this.board[column][row]).append(" ");
+    public boolean areAllShipsDestroy() {
+        for (int i = 0; i < MAX_LINE_LENGTH; i++) {
+            for (int j = 0; j < MAX_LINE_LENGTH; j++) {
+                if (board[i][j] == '#') return false;
             }
-            stringBoard.append("\n");
         }
+        return true;
+    }
 
-        return stringBoard.toString();
+    public char[][] getBoard() {
+        return board;
+    }
+
+    public int getBoardSize() {
+        return MAX_LINE_LENGTH;
     }
 }

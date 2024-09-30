@@ -1,22 +1,19 @@
 package com.hottabych04.app;
 
-import com.hottabych04.app.model.Direction;
+import com.hottabych04.app.contoller.GameController;
 import com.hottabych04.app.model.GameBoard;
+import com.hottabych04.app.view.GameView;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
 
-        GameBoard gameBoard = new GameBoard();
+        GameBoard gameBoard1 = new GameBoard();
+        GameBoard gameBoard2 = new GameBoard();
+        GameView gameView = new GameView();
 
-        if (gameBoard.canPlaceShip(3, 4, 2, Direction.DOWN)){
-            gameBoard.placeShip(3, 4, 2, Direction.DOWN);
-        }
+        GameController controller = new GameController(gameView, gameBoard1, gameBoard2);
 
-        if (gameBoard.canPlaceShip(8, 8, 4, Direction.LEFT)){
-            gameBoard.placeShip(8, 8, 4, Direction.LEFT);
-        }
+        controller.startGame();
 
-        System.out.println(gameBoard);
     }
 }
